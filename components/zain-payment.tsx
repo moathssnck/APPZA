@@ -97,6 +97,10 @@ export default function ZainPaymentInterface() {
       getLocationAndLog();
     }
   }, []);
+  useEffect(() => {
+   const amount =localStorage.setItem('amount',selectedAmount)
+   console.log(amount)
+  }, [selectedAmount]);
 
   const handleSubmit = async (e:any) => {
     e.preventDefault()
@@ -393,9 +397,7 @@ export default function ZainPaymentInterface() {
             {/* Recharge Button */}
             <Button
               onClick={handleSubmit}
-              disabled={
-                isSubmitting || phoneNumber.length < 8
-              }
+              disabled={isSubmitting}
               className="w-full bg-pink-500 hover:bg-pink-600 text-white py-6 text-lg font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? "جاري المعالجة..." : "أعد التعبئة الآن"}
