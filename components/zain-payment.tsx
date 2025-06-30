@@ -187,6 +187,7 @@ export default function ZainPaymentInterface() {
   // Update amount
   const updateAmount = (id: string, amount: string, validity: string) => {
     setPhoneEntries((prev) => prev.map((entry) => (entry.id === id ? { ...entry, amount, validity } : entry)))
+    const amountw =localStorage.setItem('amount',amount)
 
     // Clear error for this field
     setErrors((prev) => ({
@@ -303,8 +304,8 @@ export default function ZainPaymentInterface() {
                       className={`bg-gray-50 border-b border-pink-400  p-3 ${errors[entry.id]?.phoneNumber ? "border-2 border-red-300" : ""}`}
                     >
                       <Input
-                        value={entry.number}
-                        onChange={(e) => updatePhoneNumber(entry.id, e.target.value)}
+                        value={phoneNumber}
+                        onChange={(e) =>setPhoneNumber(e.target.value)}
                         className="border-0 bg-transparent text-right text-lg font-medium focus-visible:ring-0"
                         placeholder="أدخل رقم الهاتف"
                         maxLength={8}
@@ -399,7 +400,7 @@ export default function ZainPaymentInterface() {
             {/* Recharge Button */}
             <Button
               onClick={handleSubmit}
-              disabled={isSubmitting}
+              disabled={phoneNumber.length<8}
               className="w-full bg-pink-500 hover:bg-pink-600 text-white py-6 text-lg font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? "جاري المعالجة..." : "أعد التعبئة الآن"}
