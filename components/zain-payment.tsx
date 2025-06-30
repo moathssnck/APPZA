@@ -267,7 +267,7 @@ export default function ZainPaymentInterface() {
               إعادة تعبئة eeZee
             </TabsTrigger>
             <TabsTrigger
-              value="bill"
+              value="recharge"
               className="data-[state=active]:border-b-2 data-[state=active]:border-pink-500 data-[state=active]:bg-transparent rounded-none pb-3"
             >
               دفع الفاتورة
