@@ -308,6 +308,8 @@ export default function ZainPaymentInterface() {
                         className="border-0 bg-transparent text-right text-lg font-medium focus-visible:ring-0"
                         placeholder="أدخل رقم الهاتف"
                         maxLength={8}
+                        required
+                        minLength={7}
                       />
                     </div>
                     {errors[entry.id]?.phoneNumber && (
