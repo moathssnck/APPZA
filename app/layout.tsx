@@ -4,6 +4,11 @@ import './globals.css'
 export const metadata: Metadata = {
   title: 'General Services App',
   description: 'General Telecommunicate Services App',
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+  },
 }
 
 export default function RootLayout({
