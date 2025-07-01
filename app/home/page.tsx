@@ -1,49 +1,30 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { MessageSquare, Users, Zap, Shield, Globe, Star } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
 
-export default function CommunicationsLanding() {
+import { NetworkSection } from "@/components/network"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { ArrowRight, CheckCircle, Mail, MapPin, Phone, Star, Users, Zap } from "lucide-react"
+import Link from "next/link"
+
+export default function OmunactionsWebsite() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Header */}
-      <header className="px-4 lg:px-6 h-16 flex items-center border-b">
-        <Link className="flex items-center justify-center" href="#">
-          <MessageSquare className="h-6 w-6 text-primary" />
-          <span className="ml-2 text-xl font-bold">CommLink</span>
+      <header className="px-4 lg:px-6 h-16 flex items-center border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 sticky top-0 z-50">
+        <Link className="flex items-center justify-center" href="/">
+          <div className="h-8 w-8 bg-emerald-600 rounded-lg flex items-center justify-center">
+            <span className="text-white font-bold text-lg">O</span>
+          </div>
+          <span className="ml-2 text-xl font-bold text-gray-900">Omunactions</span>
         </Link>
         <nav className="ml-auto flex gap-4 sm:gap-6">
-          <Link
-            className="text-sm font-medium hover:text-primary transition-colors"
-            href="#features"
-          >
-            Features
+          <Link className="text-sm font-medium hover:text-emerald-600 transition-colors" href="#services">
+            Services
           </Link>
-          <Link
-            className="text-sm font-medium hover:text-primary transition-colors"
-            href="#pricing"
-          >
-            Pricing
-          </Link>
-          <Link
-            className="text-sm font-medium hover:text-primary transition-colors"
-            href="#about"
-          >
+          <Link className="text-sm font-medium hover:text-emerald-600 transition-colors" href="#about">
             About
           </Link>
-          <Link
-            className="text-sm font-medium hover:text-primary transition-colors"
-            href="#contact"
-          >
+          <Link className="text-sm font-medium hover:text-emerald-600 transition-colors" href="#contact">
             Contact
           </Link>
         </nav>
@@ -51,126 +32,122 @@ export default function CommunicationsLanding() {
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-gradient-to-br from-primary/5 to-primary/10">
+        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-gradient-to-br from-emerald-50 to-teal-50">
           <div className="container px-4 md:px-6">
-            <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
-              <div className="flex flex-col justify-center space-y-4">
-                <div className="space-y-2">
-                  <Badge variant="outline" className="w-fit">
-                    🚀 New: AI-Powered Messaging
-                  </Badge>
-                  <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                    Connect. Communicate. Collaborate.
-                  </h1>
-                  <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                    Transform your business communications with our unified
-                    platform. Seamless messaging, video calls, and team
-                    collaboration tools designed for the modern workplace.
-                  </p>
-                </div>
-                <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                  <Button size="lg" className="h-12 px-8">
-                    Start Free Trial
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="h-12 px-8 bg-white text-black"
-                  >
-                    Watch Demo
-                  </Button>
-                </div>
-                <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-1">
-                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                    <span className="font-medium">4.9/5</span>
-                  </div>
-                  <span>•</span>
-                  <span>10,000+ companies trust us</span>
-                  <span>•</span>
-                  <span>No credit card required</span>
-                </div>
+            <div className="flex flex-col items-center space-y-4 text-center">
+              <div className="space-y-2">
+                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none text-gray-900">
+                  Next-Generation
+                  <span className="text-emerald-600"> Telecommunications</span>
+                </h1>
+                <p className="mx-auto max-w-[700px] text-gray-600 md:text-xl">
+                  Connecting businesses and communities with reliable, high-speed telecommunications infrastructure.
+                  From fiber networks to wireless solutions, we deliver the connectivity you need.
+                </p>
               </div>
-              <div className="flex items-center justify-center">
-                <Image
-                  alt="Communications Dashboard"
-                  className="aspect-video overflow-hidden rounded-xl object-cover shadow-2xl"
-                  height="400"
-                  src="/placeholder.svg?height=400&width=600"
-                  width="600"
-                />
+              <div className="space-x-4">
+                <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700">
+                  Get Started
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+                <Button variant="outline" size="lg">
+                  Learn More
+                </Button>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Features Section */}
-        <section id="features" className="w-full py-12 md:py-24 lg:py-32">
+        {/* Services Section */}
+        <section id="services" className="w-full py-12 md:py-24 lg:py-32">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <Badge variant="outline">Features</Badge>
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
-                  Everything you need to communicate better
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-gray-900">
+                  Our Telecommunications Services
                 </h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Our comprehensive communication suite brings together all the
-                  tools your team needs to stay connected and productive.
+                <p className="max-w-[900px] text-gray-600 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                  Comprehensive telecommunications solutions designed to keep you connected with cutting-edge technology
+                  and reliable infrastructure.
                 </p>
               </div>
             </div>
             <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-3 lg:gap-12">
-              <Card className="relative overflow-hidden">
+              <Card className="border-2 hover:border-emerald-200 transition-colors">
                 <CardHeader>
-                  <MessageSquare className="h-12 w-12 text-primary" />
-                  <CardTitle>Instant Messaging</CardTitle>
+                  <Zap className="h-10 w-10 text-emerald-600" />
+                  <CardTitle>Fiber Network Infrastructure</CardTitle>
                   <CardDescription>
-                    Real-time messaging with rich media support, file sharing,
-                    and message history.
+                    High-speed fiber optic networks delivering ultra-fast internet and data transmission for businesses
+                    and residential areas.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <ul className="space-y-2 text-sm text-muted-foreground">
-                    <li>• Group chats and direct messages</li>
-                    <li>• File and media sharing</li>
-                    <li>• Message search and history</li>
-                    <li>• Custom emoji and reactions</li>
+                  <ul className="space-y-2 text-sm text-gray-600">
+                    <li className="flex items-center">
+                      <CheckCircle className="h-4 w-4 text-emerald-600 mr-2" />
+                      Fiber Installation
+                    </li>
+                    <li className="flex items-center">
+                      <CheckCircle className="h-4 w-4 text-emerald-600 mr-2" />
+                      Network Maintenance
+                    </li>
+                    <li className="flex items-center">
+                      <CheckCircle className="h-4 w-4 text-emerald-600 mr-2" />
+                      Speed Optimization
+                    </li>
                   </ul>
                 </CardContent>
               </Card>
-              <Card className="relative overflow-hidden">
+              <Card className="border-2 hover:border-emerald-200 transition-colors">
                 <CardHeader>
-                  <Users className="h-12 w-12 text-primary" />
-                  <CardTitle>Video Conferencing</CardTitle>
+                  <Users className="h-10 w-10 text-emerald-600" />
+                  <CardTitle>Business Communications</CardTitle>
                   <CardDescription>
-                    HD video calls with screen sharing, recording, and up to
-                    1000 participants.
+                    Complete business communication solutions including VoIP, video conferencing, and unified
+                    communications platforms.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <ul className="space-y-2 text-sm text-muted-foreground">
-                    <li>• HD video and crystal-clear audio</li>
-                    <li>• Screen sharing and recording</li>
-                    <li>• Virtual backgrounds</li>
-                    <li>• Meeting scheduling</li>
+                  <ul className="space-y-2 text-sm text-gray-600">
+                    <li className="flex items-center">
+                      <CheckCircle className="h-4 w-4 text-emerald-600 mr-2" />
+                      VoIP Systems
+                    </li>
+                    <li className="flex items-center">
+                      <CheckCircle className="h-4 w-4 text-emerald-600 mr-2" />
+                      Video Conferencing
+                    </li>
+                    <li className="flex items-center">
+                      <CheckCircle className="h-4 w-4 text-emerald-600 mr-2" />
+                      Unified Communications
+                    </li>
                   </ul>
                 </CardContent>
               </Card>
-              <Card className="relative overflow-hidden">
+              <Card className="border-2 hover:border-emerald-200 transition-colors">
                 <CardHeader>
-                  <Zap className="h-12 w-12 text-primary" />
-                  <CardTitle>Smart Automation</CardTitle>
+                  <Star className="h-10 w-10 text-emerald-600" />
+                  <CardTitle>Wireless & Mobile Solutions</CardTitle>
                   <CardDescription>
-                    AI-powered features to streamline workflows and boost
-                    productivity.
+                    Advanced wireless infrastructure and mobile connectivity solutions for seamless communication
+                    anywhere.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <ul className="space-y-2 text-sm text-muted-foreground">
-                    <li>• Smart message suggestions</li>
-                    <li>• Automated meeting summaries</li>
-                    <li>• Priority message filtering</li>
-                    <li>• Custom workflows</li>
+                  <ul className="space-y-2 text-sm text-gray-600">
+                    <li className="flex items-center">
+                      <CheckCircle className="h-4 w-4 text-emerald-600 mr-2" />
+                      5G Networks
+                    </li>
+                    <li className="flex items-center">
+                      <CheckCircle className="h-4 w-4 text-emerald-600 mr-2" />
+                      Cell Tower Installation
+                    </li>
+                    <li className="flex items-center">
+                      <CheckCircle className="h-4 w-4 text-emerald-600 mr-2" />
+                      Mobile Device Management
+                    </li>
                   </ul>
                 </CardContent>
               </Card>
@@ -178,142 +155,150 @@ export default function CommunicationsLanding() {
           </div>
         </section>
 
-        {/* Stats Section */}
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-muted">
+        {/* Network Coverage Section */}
+        <NetworkSection />
+
+        {/* About Section */}
+        <section id="about" className="w-full py-12 md:py-24 lg:py-32 bg-gray-50">
           <div className="container px-4 md:px-6">
-            <div className="grid gap-6 lg:grid-cols-[1fr_500px] lg:gap-12 xl:grid-cols-[1fr_550px]">
+            <div className="grid items-center gap-6 lg:grid-cols-[1fr_500px] lg:gap-12 xl:grid-cols-[1fr_550px]">
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2">
-                  <Badge variant="outline">Trusted Worldwide</Badge>
-                  <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
-                    Join thousands of teams already communicating better
+                  <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-gray-900">
+                    Leading Telecommunications Provider
                   </h2>
-                  <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                    From startups to Fortune 500 companies, teams around the
-                    world rely on our platform to stay connected and productive.
+                  <p className="max-w-[600px] text-gray-600 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                    With decades of experience in telecommunications infrastructure, we've built and maintained networks
+                    that connect millions of users. Our commitment to reliability and innovation makes us the trusted
+                    choice for connectivity solutions.
                   </p>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <div className="text-2xl font-bold">10,000+</div>
-                    <div className="text-sm text-muted-foreground">
-                      Active Companies
-                    </div>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="flex items-center space-x-2">
+                    <CheckCircle className="h-5 w-5 text-emerald-600" />
+                    <span className="text-sm font-medium">99.9% Uptime</span>
                   </div>
-                  <div className="space-y-2">
-                    <div className="text-2xl font-bold">1M+</div>
-                    <div className="text-sm text-muted-foreground">
-                      Messages Daily
-                    </div>
+                  <div className="flex items-center space-x-2">
+                    <CheckCircle className="h-5 w-5 text-emerald-600" />
+                    <span className="text-sm font-medium">24/7 Network Monitoring</span>
                   </div>
-                  <div className="space-y-2">
-                    <div className="text-2xl font-bold">99.9%</div>
-                    <div className="text-sm text-muted-foreground">Uptime</div>
+                  <div className="flex items-center space-x-2">
+                    <CheckCircle className="h-5 w-5 text-emerald-600" />
+                    <span className="text-sm font-medium">Scalable Infrastructure</span>
                   </div>
-                  <div className="space-y-2">
-                    <div className="text-2xl font-bold">150+</div>
-                    <div className="text-sm text-muted-foreground">
-                      Countries
-                    </div>
+                  <div className="flex items-center space-x-2">
+                    <CheckCircle className="h-5 w-5 text-emerald-600" />
+                    <span className="text-sm font-medium">Expert Technical Support</span>
                   </div>
                 </div>
+                <Button className="w-fit bg-emerald-600 hover:bg-emerald-700">Learn About Our Process</Button>
               </div>
-              <div className="flex items-center justify-center">
-                <Image
-                  alt="Global Communications"
-                  className="aspect-video overflow-hidden rounded-xl object-cover"
-                  height="310"
-                  src="/placeholder.svg?height=310&width=550"
-                  width="550"
-                />
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Security Section */}
-        <section className="w-full py-12 md:py-24 lg:py-32">
-          <div className="container px-4 md:px-6">
-            <div className="grid gap-6 lg:grid-cols-[500px_1fr] lg:gap-12 xl:grid-cols-[550px_1fr]">
-              <div className="flex items-center justify-center">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="flex flex-col items-center space-y-2 p-6 bg-muted rounded-lg">
-                    <Shield className="h-8 w-8 text-primary" />
-                    <div className="text-sm font-medium">
-                      End-to-End Encryption
-                    </div>
+              <div className="mx-auto aspect-video overflow-hidden rounded-xl bg-gradient-to-br from-emerald-100 to-teal-100 lg:order-last flex items-center justify-center">
+                <div className="text-center p-8">
+                  <div className="h-24 w-24 bg-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Zap className="h-12 w-12 text-white" />
                   </div>
-                  <div className="flex flex-col items-center space-y-2 p-6 bg-muted rounded-lg">
-                    <Globe className="h-8 w-8 text-primary" />
-                    <div className="text-sm font-medium">
-                      Global Infrastructure
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-center space-y-2 p-6 bg-muted rounded-lg">
-                    <Zap className="h-8 w-8 text-primary" />
-                    <div className="text-sm font-medium">99.9% Uptime</div>
-                  </div>
-                  <div className="flex flex-col items-center space-y-2 p-6 bg-muted rounded-lg">
-                    <Users className="h-8 w-8 text-primary" />
-                    <div className="text-sm font-medium">24/7 Support</div>
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col justify-center space-y-4">
-                <div className="space-y-2">
-                  <Badge variant="outline">Security & Reliability</Badge>
-                  <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
-                    Enterprise-grade security you can trust
-                  </h2>
-                  <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                    Your communications are protected with military-grade
-                    encryption, compliance certifications, and a global
-                    infrastructure built for reliability.
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">1M+ Connections</h3>
+                  <p className="text-gray-600">
+                    Reliable telecommunications infrastructure serving communities nationwide
                   </p>
-                </div>
-                <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                  <Button variant="outline" className="bg-white text-black">
-                    Security Whitepaper
-                  </Button>
-                  <Button variant="outline" className="bg-white text-black">
-                    Compliance Center
-                  </Button>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* CTA Section */}
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-primary text-primary-foreground">
+        {/* Contact Section */}
+        <section id="contact" className="w-full py-12 md:py-24 lg:py-32">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                  Ready to transform your communications?
-                </h2>
-                <p className="mx-auto max-w-[600px] text-primary-foreground/80 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Join thousands of teams who have already upgraded their
-                  communication experience. Start your free trial today.
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-gray-900">Get In Touch</h2>
+                <p className="max-w-[900px] text-gray-600 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                  Ready to transform your business? Contact us today to discuss how we can help you achieve your goals.
                 </p>
               </div>
-              <div className="w-full max-w-sm space-y-2">
-                <form className="flex gap-2">
-                  <Input
-                    className="max-w-lg flex-1 bg-white text-black"
-                    placeholder="Enter your work email"
-                    type="email"
-                  />
-                  <Button type="submit" variant="secondary">
-                    Start Free Trial
-                  </Button>
-                </form>
-                <p className="text-xs text-primary-foreground/60">
-                  14-day free trial. No credit card required.{" "}
-                  <Link className="underline underline-offset-2" href="#">
-                    Terms & Conditions
-                  </Link>
-                </p>
+            </div>
+            <div className="mx-auto grid max-w-5xl items-start gap-6 py-12 lg:grid-cols-2 lg:gap-12">
+              <div className="space-y-4">
+                <Card>
+                  <CardContent className="p-6">
+                    <form className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <label htmlFor="first-name" className="text-sm font-medium">
+                            First name
+                          </label>
+                          <Input id="first-name" placeholder="Enter your first name" />
+                        </div>
+                        <div className="space-y-2">
+                          <label htmlFor="last-name" className="text-sm font-medium">
+                            Last name
+                          </label>
+                          <Input id="last-name" placeholder="Enter your last name" />
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <label htmlFor="email" className="text-sm font-medium">
+                          Email
+                        </label>
+                        <Input id="email" placeholder="Enter your email" type="email" />
+                      </div>
+                      <div className="space-y-2">
+                        <label htmlFor="message" className="text-sm font-medium">
+                          Message
+                        </label>
+                        <textarea className="min-h-[100px]" id="message" placeholder="Tell us about your project..." />
+                      </div>
+                      <Button className="w-full bg-emerald-600 hover:bg-emerald-700" type="submit">
+                        Send Message
+                      </Button>
+                    </form>
+                  </CardContent>
+                </Card>
+              </div>
+              <div className="space-y-4">
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="space-y-4">
+                      <div className="flex items-center space-x-3">
+                        <Mail className="h-5 w-5 text-emerald-600" />
+                        <div>
+                          <p className="font-medium">Email</p>
+                          <p className="text-sm text-gray-600">info@omunactions.com</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <Phone className="h-5 w-5 text-emerald-600" />
+                        <div>
+                          <p className="font-medium">Phone</p>
+                          <p className="text-sm text-gray-600">+1 (555) 123-4567</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <MapPin className="h-5 w-5 text-emerald-600" />
+                        <div>
+                          <p className="font-medium">Office</p>
+                          <p className="text-sm text-gray-600">
+                            123 Business Ave, Suite 100
+                            <br />
+                            New York, NY 10001
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-6">
+                    <h3 className="font-semibold mb-2">Business Hours</h3>
+                    <div className="space-y-1 text-sm text-gray-600">
+                      <p>Monday - Friday: 9:00 AM - 6:00 PM</p>
+                      <p>Saturday: 10:00 AM - 4:00 PM</p>
+                      <p>Sunday: Closed</p>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             </div>
           </div>
@@ -321,22 +306,20 @@ export default function CommunicationsLanding() {
       </main>
 
       {/* Footer */}
-      <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
-        <p className="text-xs text-muted-foreground">
-          © 2024 CommLink. All rights reserved.
-        </p>
+      <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t bg-gray-50">
+        <p className="text-xs text-gray-600">© 2024 Omunactions. All rights reserved.</p>
         <nav className="sm:ml-auto flex gap-4 sm:gap-6">
-          <Link className="text-xs hover:underline underline-offset-4" href="#">
+          <Link className="text-xs hover:underline underline-offset-4 text-gray-600" href="#">
             Terms of Service
           </Link>
-          <Link className="text-xs hover:underline underline-offset-4" href="#">
+          <Link className="text-xs hover:underline underline-offset-4 text-gray-600" href="#">
             Privacy Policy
           </Link>
-          <Link className="text-xs hover:underline underline-offset-4" href="#">
+          <Link className="text-xs hover:underline underline-offset-4 text-gray-600" href="#">
             Cookie Policy
           </Link>
         </nav>
       </footer>
     </div>
-  );
+  )
 }
