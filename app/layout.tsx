@@ -5,10 +5,10 @@ export const metadata: Metadata = {
   title: 'The Telecommunication system',
   description: 'General Telecommunication system Services App',
   viewport: {
-    width: "device-width",
+    width: 'device-width',
     initialScale: 1,
     maximumScale: 1,
-  },
+  }
 }
 
 export default function RootLayout({
